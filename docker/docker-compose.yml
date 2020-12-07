@@ -92,6 +92,8 @@ services:
   mongo:
     image: hypertrace/mongodb:main
     container_name: mongo
+    ports:
+      - 27017:27017
   # Stores spans and traces and provides aggregation functions
   pinot:
     image: hypertrace/pinot-servicemanager:main
