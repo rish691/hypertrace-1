@@ -1,5 +1,8 @@
 name: get latest helm charts
 on:
+  push:
+    branches:
+      - main  
   schedule:
     - cron: '00 06 * * 5' #every friday at 11:30 AM IST/ 6 AM UST
   # workflow_dispatch will let us manually trigger the workflow from GitHub actions dashboard.
@@ -99,6 +102,12 @@ jobs:
         uses: oprypin/find-latest-tag@v1
         with:
           repository: hypertrace/hypertrace
+      
+      - name: Get latest charts for hypertrace-service
+        id: hypertrace-service
+        uses: oprypin/find-latest-tag@v1
+        with:
+          repository: hypertrace/hypertrace-service
 
       - uses: actions/checkout@v2
 
@@ -132,6 +141,7 @@ jobs:
           gateway_service_version: ${{ steps.gateway-service.outputs.tag }}
           entity_service_version: ${{ steps.entity-service.outputs.tag }}
           config_service_version: ${{ steps.config-service.outputs.tag }}
+          hypertrace_service_version: ${{ steps.hypertrace-service.outputs.tag }}
 
       - name: update release notes
         run: |
@@ -166,13 +176,13 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.prtoken }}
           commit-message: Updates helm charts
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: update-helm-charts
-          delete-branch: true
+          delete-branch: false
           title: 'chore: updates helm charts'
           body: |
             This PR,
@@ -182,8 +192,7 @@ jobs:
             helm-updates
             automated pr
             release
-          assignees: JBAhire
-          reviewers: kotharironak, rish691
+          assignees: rish691
           team-reviewers: |
             owners
             maintainers
