@@ -176,13 +176,13 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.prtoken }}
           commit-message: Updates helm charts
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: update-helm-charts
-          delete-branch: true
+          delete-branch: false
           title: 'chore: updates helm charts'
           body: |
             This PR,
@@ -192,8 +192,7 @@ jobs:
             helm-updates
             automated pr
             release
-          assignees: JBAhire
-          reviewers: kotharironak, rish691
+          assignees: rish691
           team-reviewers: |
             owners
             maintainers
